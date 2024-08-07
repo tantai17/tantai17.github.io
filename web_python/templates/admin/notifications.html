@@ -1,0 +1,65 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Thông Báo - Bảo Trì, Sửa Chữa Thiết Bị{% endblock %}
+
+{% block content %}
+
+<h2>Gửi Thông Báo Đến Người Dùng</h2>
+<form action="{{ url_for('notifications') }}" method="post">
+    <label for="users">Chọn người nhận thông báo:</label>
+    <select id="users" name="users" multiple>
+        {% for user in users %}
+            <option value="{{ user[0] }}">{{ user[0] }}</option>
+        {% endfor %}
+    </select>
+    <br>
+    <label for="content">Nội dung thông báo:</label>
+    <textarea id="content" name="content" rows="4" cols="50"></textarea>
+    <br>
+    <button type="submit">Gửi Thông Báo</button>
+</form>
+
+<h2>Danh Sách Thông Báo</h2>
+<form method="GET" action="{{ url_for('notifications') }}">
+    <label for="search">Tìm kiếm thông báo:</label>
+    <input type="text" id="search" name="search" value="{{ request.args.get('search', '') }}" placeholder="Nhập nội dung cần tìm kiếm..">
+    <button type="submit">Tìm Kiếm</button>
+    <a href="{{ url_for('notifications') }}" class="reset-button">Reset</a>
+</form>
+
+<form action="{{ url_for('export_notifications_pdf') }}" method="post">
+    <table>
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="select_all"></th>
+                <th>Người gửi</th>
+                <th>Nội dung</th>
+                <th>Thời gian gửi</th>
+                <th>Người nhận</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for notification in notifications %}
+            <tr>
+                <td><input type="checkbox" name="notification_ids" value="{{ notification[0] }}"></td>
+                <td>{{ notification[1] }}</td>
+                <td>{{ notification[2] }}</td>
+                <td>{{ notification[3] }}</td>
+                <td>{{ notification[4] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="submit">Xuất PDF</button>
+</form>
+
+{% endblock %}
+
+<script>
+document.getElementById('select_all').addEventListener('click', function() {
+    var checkboxes = document.querySelectorAll('input[name="notification_ids"]');
+    for (var checkbox of checkboxes) {
+        checkbox.checked = this.checked;
+    }
+});
+</script>

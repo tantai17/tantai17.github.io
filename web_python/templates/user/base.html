@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}User Base Template{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            color: white;
+            padding: 1rem;
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        nav ul li {
+            margin: 0 1rem;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .user-info span {
+            margin-right: 1rem;
+        }
+        .user-info a {
+            color: white;
+            text-decoration: none;
+        }
+        .user-info a:hover {
+            text-decoration: underline;
+        }
+        main {
+            flex: 1;
+            padding: 1rem;
+            width: 100%;
+            overflow: auto; /* Ensure content can scroll if it exceeds viewport */
+        }
+        footer {
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 1rem;
+            width: 100%;
+            position: relative;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Bảo Trì, Sửa Chữa Thiết Bị</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('user_home') }}">Trang chủ</a></li>
+                <li><a href="{{ url_for('request_device_update') }}">Yêu cầu</a></li>
+                <li><a href="{{ url_for('change_password') }}">Đổi mật khẩu</a></li>
+            </ul>
+        </nav>
+        <div class="user-info">
+            {% if session.logged_in %}
+                <span>Xin chào, {{ session.username }}</span>
+                <a href="{{ url_for('logout') }}">Đăng Xuất<br></a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Đăng nhập</a>
+            {% endif %}
+        </div>
+    </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2024 Phần Mềm Tiếp Nhận Thông Tin Bảo Trì, Sửa Chữa Thiết Bị</p>
+        <p>TGU - Phòng Quản Lý Cơ Sở Vật Chất</p>
+    </footer>
+</body>
+</html>

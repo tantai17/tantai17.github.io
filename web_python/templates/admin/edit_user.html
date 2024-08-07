@@ -1,0 +1,67 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Sửa Người Dùng{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2>Sửa Người Dùng</h2>
+        <form method="post">
+            <p class="user-info">Tên Đăng Nhập: <strong>{{ user[1] }}</strong></p>
+            <label for="password">Mật Khẩu Mới:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Lưu Thay Đổi</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block styles %}
+    <style>
+        .container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+            margin: 2rem auto; /* Center horizontally and add margin */
+        }
+        h2 {
+            margin-top: 0;
+            color: #333;
+            text-align: center;
+        }
+        .user-info {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: #555;
+        }
+        label {
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #555;
+            display: block;
+        }
+        input[type="password"] {
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            width: 100%; /* Make input full width */
+        }
+        button {
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%; /* Make button full width */
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+{% endblock %}

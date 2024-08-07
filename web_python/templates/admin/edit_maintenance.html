@@ -1,0 +1,42 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Chỉnh Sửa Lịch Bảo Trì - Bảo Trì, Sửa Chữa Thiết Bị{% endblock %}
+
+{% block content %}
+<h2>Chỉnh Sửa Lịch Bảo Trì Thiết Bị</h2>
+<form action="{{ url_for('edit_maintenance', maintenance_id=maintenance[0]) }}" method="POST">
+    <label for="maintenance_date">Ngày bảo trì:</label>
+    <input type="date" id="maintenance_date" name="maintenance_date" value="{{ maintenance[1] }}" required>
+    <label for="description">Mô tả nội dung bảo trì:</label>
+    <textarea id="description" name="description" required>{{ maintenance[2] }}</textarea>
+    <label for="device_id">Thiết bị:</label>
+    <select id="device_id" name="device_id" required onchange="fetchDeviceInfo(this.value)">
+        {% for device in devices %}
+        <option value="{{ device[0] }}" {% if device[0] == maintenance[3] %}selected{% endif %}>{{ device[1] }}</option>
+        {% endfor %}
+    </select>
+    <label for="assigned_user">Người thực hiện bảo trì:</label>
+    <select id="assigned_user" name="assigned_user" required>
+        {% for user in users %}
+        <option value="{{ user[0] }}" {% if user[0] == maintenance[4] %}selected{% endif %}>{{ user[1] }}</option>
+        {% endfor %}
+    </select>
+    <label for="status">Trạng thái:</label>
+    <input type="text" id="status" name="status" value="{{ maintenance[5] }}" readonly>
+    <label for="location">Nơi sử dụng:</label>
+    <input type="text" id="location" name="location" value="{{ maintenance[6] }}" readonly>
+    <button type="submit">Cập Nhật Lịch Bảo Trì</button>
+</form>
+
+<script>
+    function fetchDeviceInfo(device_code) {
+        fetch(`/get_device_info/${device_code}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('status').value = data.status;
+                document.getElementById('location').value = data.location;
+            })
+            .catch(error => console.error('Error fetching device info:', error));
+    }
+</script>
+{% endblock %}

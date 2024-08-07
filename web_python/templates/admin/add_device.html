@@ -1,0 +1,84 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Thiết bị - Bảo Trì, Sửa Chữa Thiết Bị{% endblock %}
+
+{% block content %}
+
+<h2>Thêm Thiết Bị Mới</h2>
+<form action="{{ url_for('add_device') }}" method="POST" enctype="multipart/form-data">
+    <label for="device_code">Mã thiết bị:</label>
+    <input type="text" id="device_code" name="device_code" required>
+    <label for="device_name">Tên thiết bị:</label>
+    <input type="text" id="device_name" name="device_name" required>
+    <label for="device_image">Hình ảnh:</label>
+    <input type="file" id="device_image" name="device_image">
+    
+    <label for="start_date">Ngày bắt đầu sử dụng:</label>
+    <input type="date" id="start_date" name="start_date" required>
+    <label for="status">Trạng thái:</label>
+    <select id="status" name="status" required>
+        <option value="Hoạt động">Hoạt động</option>
+        <option value="Không hoạt động">Không hoạt động</option>
+        <option value="Đang sửa chữa">Đang sửa chữa</option>
+    </select>
+    <label for="technical_spec">Thông số kỹ thuật:</label>
+    <textarea id="technical_spec" name="technical_spec"></textarea>
+    <label for="location">Nơi sử dụng:</label>
+    <input type="text" id="location" name="location" required>
+    <button type="submit">Thêm Thiết Bị</button>
+</form>
+
+<h2>Danh Sách Các Thiết Bị</h2>
+<form method="GET" action="{{ url_for('list_of_devices') }}" style="margin-bottom: 1rem;">
+    <label for="search">Tìm Kiếm Thiết Bị:</label>
+    <input type="text" id="search" name="search" value="{{ request.args.get('search', '') }}" placeholder="Nhập nội dung cần tìm kiếm..">
+    <button type="submit">Tìm Kiếm</button>
+    <a href="{{ url_for('list_of_devices') }}" class="reset-button">Reset</a>
+</form>
+
+<form method="POST" action="{{ url_for('export_devices_pdf') }}">
+    <table>
+        <thead>
+            <tr>
+                <th>Chọn</th>
+                <th>Mã thiết bị</th>
+                <th>Tên thiết bị</th>
+                <th>Hình ảnh</th>
+                <th>Ngày bắt đầu sử dụng</th>
+                <th>Trạng thái</th>
+                <th>Thông số kỹ thuật</th>
+                <th>Nơi sử dụng</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for device in devices %}
+            <tr>
+                <td><input type="checkbox" name="device_ids" value="{{ device[0] }}"></td>
+                <td>{{ device[0] }}</td>
+                <td>{{ device[1] }}</td>
+                <td>
+                    {% if device[2] %}
+                    <img src="{{ url_for('static', filename=device[2].replace('\\', '/')) }}" alt="{{ device[1] }}" width="100">
+                    {% else %}
+                    No Image
+                    {% endif %}
+                </td>
+                <td>{{ device[3] }}</td>
+                <td>{{ device[4] }}</td>
+                <td>{{ device[5] }}</td>
+                <td>{{ device[6] }}</td>
+                <td>
+                    <button type="submit"><a href="{{ url_for('edit_device', device_code=device[0]) }}">Chinh Sửa</a></button>
+                    <form action="{{ url_for('delete_device', device_code=device[0]) }}" method="POST" style="display:inline;">
+                        <button type="submit" onclick="return confirm('Bạn có muốn Xóa thiết bị ra khỏi phần mềm ?')" class="reset-button">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="submit">Xuất ra PDF</button>
+</form>
+
+{% endblock %}

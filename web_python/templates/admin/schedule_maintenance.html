@@ -1,0 +1,106 @@
+{% extends "admin/base.html" %}
+{% block tab_class %}tab-schedule-maintenance{% endblock %}
+
+{% block title %}Lịch Bảo Trì - Bảo Trì, Sửa Chữa Thiết Bị{% endblock %}
+
+{% block content %}
+<h2>Lập Lịch Bảo Trì Thiết Bị</h2>
+<form action="{{ url_for('schedule_maintenance') }}" method="POST">
+    <label for="maintenance_date">Ngày bảo trì:</label>
+    <input type="date" id="maintenance_date" name="maintenance_date" required>
+    <label for="description">Mô tả nội dung bảo trì:</label>
+    <textarea id="description" name="description" required></textarea>
+    <label for="device_ids">Thiết bị:</label>
+    <select id="device_ids" name="device_ids" multiple required onchange="fetchDeviceInfo(this)">
+        {% for device in devices %}
+        <option value="{{ device[0] }}">{{ device[0] }}</option>
+        {% endfor %}
+    </select>
+    <label for="assigned_users">Người thực hiện bảo trì:</label>
+    <select id="assigned_users" name="assigned_users" multiple required>
+        {% for user in users %}
+        <option value="{{ user[0] }}">{{ user[1] }}</option>
+        {% endfor %}
+    </select>
+    <div id="device_info"></div>
+    <button type="submit">Lập Lịch Bảo Trì</button>
+</form>
+
+<h2>Danh Sách Lịch Bảo Trì Thiết Bị</h2>
+<form method="GET" action="{{ url_for('schedule_maintenance') }}">
+    <label for="search">Tìm kiếm lịch bảo trì:</label>
+    <input type="text" id="search" name="search" value="{{ request.args.get('search', '') }}" placeholder="Nhập nội dung cần tìm kiếm..">
+    <button type="submit">Tìm Kiếm</button>
+    <a href="{{ url_for('schedule_maintenance') }}" class="reset-button">Reset</a>
+</form>
+
+<!-- Form để chọn các lịch bảo trì và xuất PDF -->
+<form id="export_pdf_form" method="POST" action="{{ url_for('export_maintenance_pdf') }}">
+    <table>
+        <thead>
+            <tr>
+                <th></th> <!-- Thêm checkbox vào đây -->
+                <th>Ngày bảo trì</th>
+                <th>Mô tả nội dung bảo trì</th>
+                <th>Thiết bị</th>
+                <th>Người thực hiện bảo trì</th>
+                <th>Trạng thái</th>
+                <th>Nơi sử dụng</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in maintenance_records %}
+            <tr>
+                <td><input type="checkbox" name="maintenance_ids" value="{{ record[0] }}"></td> <!-- Checkbox -->
+                <td>{{ record[1] }}</td>
+                <td>{{ record[2] }}</td>
+                <td>{{ record[3] }}</td>
+                <td>{{ record[4] }}</td>
+                <td>{{ record[5] }}</td>
+                <td>{{ record[6] }}</td>
+                <td>
+                    <button type="submit"><a href="{{ url_for('edit_maintenance', maintenance_id=record[0]) }}" class="edit-button">Chỉnh Sửa</a></button>
+                    <form action="{{ url_for('delete_maintenance', maintenance_id=record[0]) }}" method="POST" style="display:inline;">
+                        <button type="submit" onclick="return confirm('Bạn có muốn Xóa lịch bảo trì ra khỏi danh sách?')" class="delete-button">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="button" onclick="submitExportPdfForm()">Xuất PDF</button> <!-- Nút xuất PDF -->
+</form>
+
+<script>
+    function fetchDeviceInfo(selectElement) {
+        let deviceIds = Array.from(selectElement.selectedOptions).map(option => option.value);
+        if (deviceIds.length > 0) {
+            fetch(`/get_device_info/${deviceIds.join(',')}`)
+                .then(response => response.json())
+                .then(data => {
+                    let deviceInfoDiv = document.getElementById('device_info');
+                    deviceInfoDiv.innerHTML = '';
+                    data.forEach((device, index) => {
+                        let infoDiv = document.createElement('div');
+                        infoDiv.innerHTML = `<p>Thiết bị ${index + 1}:</p>
+                                             <p>Trạng thái: <input type="text" name="status_${device.device_code}" value="${device.status}" readonly></p>
+                                             <p>Nơi sử dụng: <input type="text" name="location_${device.device_code}" value="${device.location}" readonly></p>`;
+                        deviceInfoDiv.appendChild(infoDiv);
+                    });
+                })
+                .catch(error => console.error('Error fetching device info:', error));
+        }
+    }
+
+    function submitExportPdfForm() {
+        const form = document.getElementById('export_pdf_form');
+        const checkboxes = form.querySelectorAll('input[type="checkbox"]:checked');
+        if (checkboxes.length === 0) {
+            alert('Vui lòng chọn ít nhất một lịch bảo trì để xuất PDF.');
+            return;
+        }
+        form.submit();
+    }
+</script>
+{% endblock %}

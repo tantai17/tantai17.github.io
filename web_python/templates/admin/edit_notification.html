@@ -1,0 +1,21 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Chỉnh Sửa Thông Báo - Bảo Trì, Sửa Chữa Thiết Bị{% endblock %}
+
+{% block content %}
+<h2>Chỉnh Sửa Thông Báo Đến Người Dùng</h2>
+<form action="{{ url_for('edit_notification', id=notification[0]) }}" method="post">
+    <label for="content">Nội dung thông báo:</label>
+    <textarea id="content" name="content" rows="4" cols="50">{{ notification[2] }}</textarea>
+    <br>
+
+    <label for="users">Chọn người nhận thông báo:</label>
+    <select id="users" name="users" multiple>
+        {% for user in users %}
+            <option value="{{ user[0] }}" {% if user[0] in recipients %}selected{% endif %}>{{ user[0] }}</option>
+        {% endfor %}
+    </select>
+    <br>
+    <button type="submit">Cập Nhật Thông Báo</button>
+</form>
+{% endblock %}

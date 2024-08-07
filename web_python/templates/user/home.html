@@ -1,0 +1,51 @@
+{% extends "user/base.html" %}
+
+{% block title %}Trang Chủ - Bảo Trì, Sửa Chữa Thiết Bị{% endblock %}
+
+{% block content %}
+
+<!-- Display Notifications -->
+<section class="notifications-section">
+    <h2>Thông Báo Của Bạn</h2>
+    <ul class="notifications-list">
+        {% for notification in notifications %}
+            <li class="notification-item"><strong>{{ notification[0] }}</strong>: {{ notification[1] }} ({{ notification[2] }})</li>
+        {% else %}
+            <li>Không có thông báo.</li>
+        {% endfor %}
+    </ul>
+</section>
+
+<!-- Display Maintenance Records -->
+<section class="maintenance-section">
+    <h2>Lịch Bảo Trì Của Bạn</h2>
+    <table class="maintenance-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Ngày</th>
+                <th>Mô tả nội dung bảo trì</th>
+                <th>Thiết bị</th>
+                <th>Trạng thái</th>
+                <th>Nơi sử dụng</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in maintenance_records %}
+                <tr>
+                    <td>{{ record[0] }}</td>
+                    <td>{{ record[1] }}</td>
+                    <td>{{ record[2] }}</td>
+                    <td>{{ record[3] }}</td>
+                    <td>{{ record[4] }}</td>
+                    <td>{{ record[5] }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">Không có lịch bảo trì.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

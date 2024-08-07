@@ -1,0 +1,47 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Quản Lý Ngân Sách{% endblock %}
+
+{% block content %}
+<h2>Quản Lý Ngân Sách</h2>
+<a href="{{ url_for('add_budget') }}">Thêm Ngân Sách Mới</a>
+<form id="export-form" action="{{ url_for('export_budgets_pdf') }}" method="POST">
+    <table>
+        <tr>
+            <th><input type="checkbox" id="select-all" onclick="toggleSelectAll(this)"> Chọn</th>
+            <th>ID</th>
+            <th>Tên</th>
+            <th>Số Tiền</th>
+            <th>Đã Chi</th>
+            <th>Còn Lại</th>
+            <th>Hành Động</th>
+        </tr>
+        {% for budget in budgets %}
+        <tr>
+            <td><input type="checkbox" name="budget_ids" value="{{ budget.id }}"></td>
+            <td>{{ budget.id }}</td>
+            <td>{{ budget.name }}</td>
+            <td>{{ budget.amount }}</td>
+            <td>{{ budget.spent }}</td>
+            <td>{{ budget.remaining }}</td>
+            <td>
+                <a href="{{ url_for('edit_budget', id=budget.id) }}">Sửa</a>
+                <form action="{{ url_for('delete_budget', id=budget.id) }}" method="post" style="display:inline;">
+                    <button type="submit">Xóa</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <button type="submit">Xuất PDF</button>
+</form>
+
+<script>
+    function toggleSelectAll(source) {
+        checkboxes = document.getElementsByName('budget_ids');
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
+</script>
+{% endblock %}

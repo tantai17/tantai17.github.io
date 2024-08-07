@@ -1,0 +1,43 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+<h2>Quản Lý Tài Khoản</h2>
+<a href="{{ url_for('add_user') }}">Thêm Người Dùng</a>
+<form id="export-form" action="{{ url_for('export_users_pdf') }}" method="POST">
+    <table>
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="select-all" onclick="toggleSelectAll(this)"> Chọn</th>
+                <th>ID</th>
+                <th>Tên Đăng Nhập</th>
+                <th>Vai Trò</th>
+                <th>Thao Tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td><input type="checkbox" name="user_ids" value="{{ user[0] }}"></td> <!-- ID -->
+                <td>{{ user[0] }}</td> <!-- ID -->
+                <td>{{ user[1] }}</td> <!-- Tên Đăng Nhập -->
+                <td>{{ user[2] }}</td> <!-- Vai Trò -->
+                <td>
+                    <a href="{{ url_for('edit_user', user_id=user[0]) }}">Sửa</a> <!-- Sử dụng user[0] thay vì user.id -->
+                    <a href="{{ url_for('delete_user', user_id=user[0]) }}">Xóa</a> <!-- Sử dụng user[0] thay vì user.id -->
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="submit">Xuất PDF</button>
+</form>
+
+<script>
+    function toggleSelectAll(source) {
+        checkboxes = document.getElementsByName('user_ids');
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
+</script>
+{% endblock %}

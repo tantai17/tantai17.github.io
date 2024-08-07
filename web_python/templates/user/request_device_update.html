@@ -1,0 +1,61 @@
+{% extends 'user/base.html' %}
+
+{% block title %}Yêu Cầu Cập Nhật Trạng Thái Thiết Bị - Bảo Trì, Sửa Chữa Thiết Bị{% endblock %}
+
+{% block content %}
+<h2>Yêu Cầu Cập Nhật Trạng Thái Thiết Bị</h2>
+
+{% if devices %}
+    <form method="post" action="{{ url_for('request_device_update') }}" class="device-form">
+        <div class="form-group">
+            <label for="device_code">Chọn Thiết bị:</label>
+            <select id="device_code" name="device_code" onchange="this.form.submit()">
+                <option value="">--Hãy chọn thiết bị--</option>
+                {% for device_code, device_name in devices %}
+                    <option value="{{ device_code }}" {% if device and device[0] == device_code %}selected{% endif %}>
+                        {{ device_code }} - {{ device_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+{% endif %}
+
+{% if device %}
+    <form action="{{ url_for('submit_device_update_request') }}" method="post" class="device-form">
+        <div class="form-group">
+            <label for="device_code">Mã thiết bị:</label>
+            <input type="text" id="device_code" name="device_code" value="{{ device[0] }}" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="device_name">Tên thiết Bị:</label>
+            <input type="text" id="device_name" name="device_name" value="{{ device[1] }}" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="device_specs">Thông số kỹ thuật:</label>
+            <input type="text" id="device_specs" name="device_specs" value="{{ device[5] }}" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="current_status">Trạng thái hiện tại:</label>
+            <input type="text" id="current_status" name="current_status" value="{{ device[4] }}" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="new_status">Trạng thái mới:</label>
+            <select id="new_status" name="new_status">
+                <option value="Active">Hoạt động</option>
+                <option value="Inactive">Không hoạt động</option>
+                <option value="Repairing">Đang sửa chữa</option>
+                <!-- Add more status options as needed -->
+            </select>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Yêu cầu" class="submit-button">
+        </div>
+    </form>
+{% endif %}
+{% endblock %}

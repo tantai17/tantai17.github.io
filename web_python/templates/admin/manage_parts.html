@@ -1,0 +1,59 @@
+{% extends 'admin/base.html' %}
+{% block title %}Quản Lý Phụ Tùng{% endblock %}
+{% block content %}
+<h2>Quản Lý Phụ Tùng</h2>
+<a href="{{ url_for('add_part') }}">Thêm Phụ Tùng Mới</a>
+
+<!-- Form để chọn các phụ tùng và xuất PDF -->
+<form id="export_pdf_form" method="POST" action="{{ url_for('export_parts_pdf') }}">
+    <table>
+        <thead>
+            <tr>
+                <th></th> <!-- Thêm checkbox vào đây -->
+                <th>Tên Phụ Tùng</th>
+                <th>Số Lượng</th>
+                <th>Hình Ảnh</th>
+                <th>Vị Trí</th>
+                <th>Hành Động</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for part in parts %}
+            <tr>
+                <td><input type="checkbox" name="part_ids" value="{{ part[1] }}"></td> <!-- Sử dụng part_code -->
+                <td>{{ part[2] }}</td>
+                <td>{{ part[4] }}</td>
+                <td>
+                    {% if part[3] %}
+                    <img src="{{ url_for('get_image', part_id=part[0]) }}" alt="Image" style="width:100px;height:auto;">
+                    {% else %}
+                    Không có hình ảnh
+                    {% endif %}
+                </td>
+                <td>{{ part[6] }}</td>
+                <td>
+                    <a href="{{ url_for('edit_part', part_code=part[1]) }}">Sửa</a>
+                    <form action="{{ url_for('delete_part', part_code=part[1]) }}" method="post" style="display:inline;">
+                        <button type="submit">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="button" onclick="submitExportPdfForm()">Xuất PDF</button> <!-- Nút xuất PDF -->
+</form>
+
+
+<script>
+    function submitExportPdfForm() {
+        const form = document.getElementById('export_pdf_form');
+        const checkboxes = form.querySelectorAll('input[type="checkbox"]:checked');
+        if (checkboxes.length === 0) {
+            alert('Vui lòng chọn ít nhất một phụ tùng để xuất PDF.');
+            return;
+        }
+        form.submit();
+    }
+</script>
+{% endblock %}

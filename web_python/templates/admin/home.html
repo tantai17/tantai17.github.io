@@ -1,0 +1,81 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Trang Chủ - Bảo Trì, Sửa Chữa Thiết Bị{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h2 class="dashboard-title">Thống kê thiết bị</h2>
+    <div class="statistics-box">
+        <div class="statistics-item">
+            <h3 class="item-title">Thiết bị hoạt động</h3>
+            <p class="item-value">{{ active_devices }}</p>
+        </div>
+        <div class="statistics-item">
+            <h3 class="item-title">Thiết bị bảo trì</h3>
+            <p class="item-value">{{ maintenance_devices }}</p>
+        </div>
+        
+        <div class="statistics-item">
+            <h3 class="item-title">Thiết bị không hoạt động</h3>
+            <p class="item-value">{{ inactive_devices }}</p>
+        </div>
+        <div class="statistics-item">
+            
+            <h3 class="item-title">Tổng số thiết bị</h3>
+            <p class="item-value">{{ total_devices }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-container">
+    <h2 class="dashboard-title">Yêu cầu cập nhật thiết bị</h2>
+    <div class="statistics-box">
+        <div class="statistics-item">
+            <h3 class="item-title">Yêu cầu cập nhật thiết bị đang chờ</h3>
+            <p class="item-value">{{ device_update_requests }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-container">
+    <h2 class="dashboard-title">Thống kê người dùng</h2>
+    <div class="statistics-box">
+        <div class="statistics-item">
+            <h3 class="item-title">Tổng số người dùng (trừ Admin)</h3>
+            <p class="item-value">{{ total_users }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-container">
+    <h2 class="dashboard-title">Thống kê bảo trì</h2>
+    <div class="statistics-box">
+        <div class="statistics-item">
+            <h3 class="item-title">Bảo trì đã qua</h3>
+            <p class="item-value">{{ past_maintenance }}</p>
+        </div>
+        <div class="statistics-item">
+            <h3 class="item-title">Bảo trì hôm nay</h3>
+            <p class="item-value">{{ today_maintenance }}</p>
+        </div>
+        <div class="statistics-item">
+            <h3 class="item-title">Bảo trì sắp tới</h3>
+            <p class="item-value">{{ upcoming_maintenance }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-container">
+    <h2 class="dashboard-title">Thống kê thông báo</h2>
+    <div class="statistics-box">
+        <div class="statistics-item">
+            <h3 class="item-title">Tổng số thông báo</h3>
+            <p class="item-value">{{ total_notifications }}</p>
+        </div>
+    </div>
+</div>
+
+<form action="{{ url_for('export_dashboard_pdf') }}" method="POST">
+    <button type="submit">Xuất PDF</button>
+</form>
+{% endblock %}

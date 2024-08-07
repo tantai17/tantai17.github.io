@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Bảo Trì, Sửa Chữa Thiết Bị{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            color: white;
+            padding: 0 1rem; /* Padding chỉ bên trái và bên phải */
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            height: 60px; /* Chiều cao của header */
+            box-sizing: border-box;
+        }
+        h1 {
+            margin: 0;
+            font-size: 1.2rem; /* Giảm kích thước chữ nếu cần */
+            white-space: nowrap; /* Ngăn chữ tự động xuống dòng */
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-wrap: nowrap; /* Ngăn các mục trong nav xuống dòng */
+        }
+        nav ul li {
+            margin: 0 1rem;
+            position: relative;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+        nav ul li:hover .dropdown-menu {
+            display: block;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #333;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            z-index: 1000;
+            
+        }
+        .dropdown-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            width: 100px;
+        }
+        .dropdown-menu a:hover {
+            background-color: #444;
+            width: 100px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .user-info span {
+            margin-right: 1rem;
+        }
+        .user-info a {
+            color: white;
+            text-decoration: none;
+        }
+        .user-info a:hover {
+            text-decoration: underline;
+        }
+        main {
+            flex: 1;
+            padding: 1rem;
+            margin-top: 60px; /* Để nội dung không bị che khuất bởi header */
+            box-sizing: border-box;
+            overflow: auto; /* Đảm bảo nội dung có thể cuộn nếu vượt quá viewport */
+        }
+        footer {
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Bảo Trì, Sửa Chữa Thiết Bị</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Trang chủ</a></li>
+                <li>
+                    <a href="#">Quản Lý</a>
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('add_device') }}">Thiết Bị</a>
+                        <a href="{{ url_for('manage_parts') }}">Phụ Tùng</a>
+                        <a href="{{ url_for('manage_users') }}">Tài Khoản</a>
+                        <a href="{{ url_for('manage_budgets') }}">Ngân Sách</a>
+                    </div>
+                </li>
+                <li><a href="{{ url_for('schedule_maintenance') }}">Lịch Bảo Trì</a></li>
+                <li><a href="{{ url_for('notifications') }}">Thông Báo</a></li>
+                <li><a href="{{ url_for('device_update_requests') }}">Yêu Cầu Cập Nhật</a></li>
+            </ul>
+        </nav>
+        <div class="user-info">
+            {% if session.logged_in %}
+                <span>Xin chào, {{ session.username }}</span>
+                <a href="{{ url_for('logout') }}">Đăng Xuất</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Đăng Nhập</a>
+            {% endif %}
+        </div>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2024 Phần Mềm Tiếp Nhận Thông Tin Bảo Trì, Sửa Chữa Thiết Bị</p>
+        <p>TGU - Phòng Quản Lý Cơ Sở Vật Chất</p>
+    </footer>
+</body>
+</html>

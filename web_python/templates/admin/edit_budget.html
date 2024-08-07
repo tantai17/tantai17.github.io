@@ -1,0 +1,16 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Sửa Ngân Sách{% endblock %}
+
+{% block content %}
+<h2>Sửa Ngân Sách</h2>
+<form action="{{ url_for('edit_budget', id=budget.id) }}" method="post">
+    <label for="name">Tên:</label>
+    <input type="text" id="name" name="name" value="{{ budget.name }}" required>
+    <label for="amount">Số Tiền:</label>
+    <input type="number" id="amount" name="amount" value="{{ budget.amount }}" required>
+    <label for="spent">Đã Chi:</label>
+    <input type="number" id="spent" name="spent" value="{{ budget.spent }}" required>
+    <button type="submit">Cập Nhật</button>
+</form>
+{% endblock %}

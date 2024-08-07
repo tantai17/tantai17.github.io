@@ -1,0 +1,38 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Chỉnh Sửa Thiết Bị - Bảo Trì, Sửa Chữa Thiết Bị{% endblock %}
+
+{% block content %}
+    <h2>Chỉnh Sửa Thiết Bị</h2>
+    <form action="{{ url_for('edit_device', device_code=device[0]) }}" method="POST" enctype="multipart/form-data">
+        <label for="device_code">Mã thiết bị:</label>
+        <input type="text" id="device_code" name="device_code" value="{{ device[0] }}" readonly>
+
+        <label for="device_name">Tên thiết bị:</label>
+        <input type="text" id="device_name" name="device_name" value="{{ device[1] }}" required>
+
+        <label for="device_image">Hình ảnh:</label>
+        {% if device[2] %}
+        <img src="{{ url_for('static', filename=device[2]) }}" alt="{{ device[0] }}" width="100"><br>
+        {% endif %}
+        <input type="file" id="device_image" name="device_image">
+
+        <label for="start_date">Ngày bắt đầu sử dụng:</label>
+        <input type="date" id="start_date" name="start_date" value="{{ device[3] }}" required>
+
+        <label for="status">Trạng thái:</label>
+        <select id="status" name="status" required>
+            <option value="Hoạt động" {% if device[4] == 'Hoạt động' %}selected{% endif %}>Hoạt động</option>
+            <option value="Không hoạt động" {% if device[4] == 'Không hoạt động' %}selected{% endif %}>Không hoạt động</option>
+            <option value="Đang sửa chữa" {% if device[4] == 'Đang sửa chữa' %}selected{% endif %}>Đang sửa chữa</option>
+        </select>
+
+        <label for="technical_spec">Thông số kỹ thuật:</label>
+        <textarea id="technical_spec" name="technical_spec">{{ device[5] }}</textarea>
+
+        <label for="location">Nơi sử dụng:</label>
+        <input type="text" id="location" name="location" value="{{ device[6] }}" required>
+
+        <button type="submit">Cập Nhật</button>
+    </form>
+{% endblock %}
